@@ -69,11 +69,16 @@ func foo(filename string, headers []string) []interface{} {
 
 		for i, header := range headers {
 			n, err := strconv.Atoi(record[i])
-			if err != nil {
-				thing[header] = record[i]
-			} else {
+			if err == nil {
 				thing[header] = n
+				continue
 			}
+			nf, err := strconv.ParseFloat(record[i], 64)
+			if err == nil {
+				thing[header] = nf
+				continue
+			}
+			thing[header] = record[i]
 		}
 		stuff = append(stuff, thing)
 	}
