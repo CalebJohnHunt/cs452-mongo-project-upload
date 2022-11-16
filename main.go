@@ -14,9 +14,9 @@ import (
 )
 
 // Connection URI
-const uri = "mongodb+srv://admin:holycowbatman@cs452.uemyzi8.mongodb.net/?retryWrites=true&w=majority"
 
 func main() {
+	uri := os.Args[1]
 	// Create a new client and connect to the server
 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
 	if err != nil {
@@ -27,11 +27,6 @@ func main() {
 			panic(err)
 		}
 	}()
-	// Ping the primary
-	// if err := client.Ping(context.TODO(), readpref.Primary()); err != nil {
-	// 	panic(err)
-	// }
-	// fmt.Println("Successfully connected and pinged.")
 
 	db := client.Database("mongo_project")
 
