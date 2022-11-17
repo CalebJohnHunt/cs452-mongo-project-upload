@@ -55,9 +55,16 @@ func foo(filename string, headers []string) []interface{} {
 
 	stuff := []interface{}{}
 
+	// for logging
+	count := 0
 	for {
+		count++
+		if count&(count-1) == 0 { // Report every power of two
+			fmt.Printf("Read in %d rows\n", count)
+		}
 		record, err := csvr.Read()
 		if err == io.EOF {
+			fmt.Println("Finished reading in the csv.")
 			return stuff
 		}
 
@@ -68,6 +75,10 @@ func foo(filename string, headers []string) []interface{} {
 		thing := map[string]interface{}{}
 
 		for i, header := range headers {
+			// No need to keep empty fields. Just let them be non-existant instead of null, 0, empty-string, etc.
+			if len(record[i]) == 0 {
+				continue
+			}
 			n, err := strconv.Atoi(record[i])
 			if err == nil {
 				thing[header] = n
