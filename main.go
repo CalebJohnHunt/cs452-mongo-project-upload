@@ -8,7 +8,9 @@ import (
 	"io"
 	"os"
 	"strconv"
+	"time"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -87,6 +89,11 @@ func foo(filename string, headers []string) []interface{} {
 			nf, err := strconv.ParseFloat(record[i], 64)
 			if err == nil {
 				thing[header] = nf
+				continue
+			}
+			nt, err := time.Parse("2006-01-02", record[i])
+			if err == nil {
+				thing[header] = primitive.NewDateTimeFromTime(nt)
 				continue
 			}
 			thing[header] = record[i]
